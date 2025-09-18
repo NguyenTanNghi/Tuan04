@@ -1,43 +1,45 @@
--- Tạo cơ sở dữ liệu
+-- 1. TẠO CƠ SỞ DỮ LIỆU
 CREATE
-DATABASE QUANLYDIENTHOAI;
+DATABASE IF NOT EXISTS QUANLYDANHMUC CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
-
--- Sử dụng cơ sở dữ liệu vừa tạo
+-- 2. SỬ DỤNG CƠ SỞ DỮ LIỆU
 USE
-QUANLYDIENTHOAI;
+QUANLYDANHMUC;
 
-
--- Tạo bảng Nhà Cung Cấp
-CREATE TABLE NHACUNGCAP
+-- 3. TẠO BẢNG DANHMUC
+CREATE TABLE DANHMUC
 (
-    MANCC       NVARCHAR(10) PRIMARY KEY,
-    TENNHACC    NVARCHAR(100) NOT NULL,
-    DIACHI      NVARCHAR(255),
-    SODIENTHOAI NVARCHAR(15)
+    MADM        VARCHAR(10) PRIMARY KEY,
+    TENDANHMUC  VARCHAR(100) NOT NULL,
+    NGUOIQUANLY VARCHAR(100),
+    GHICHU      TEXT
 );
 
-
--- Tạo bảng Điện Thoại
-CREATE TABLE DIENTHOAI
+-- 4. TẠO BẢNG TINTUC
+CREATE TABLE TINTUC
 (
-    MADT       NVARCHAR(10) PRIMARY KEY,
-    TENDT      NVARCHAR(100) NOT NULL,
-    NAMSANXUAT INT,
-    CAUHINH    NVARCHAR(255),
-    MANCC      NVARCHAR(10),
-    HINHANH    NVARCHAR(255),
-    FOREIGN KEY (MANCC) REFERENCES NHACUNGCAP (MANCC)
+    MATT      VARCHAR(10) PRIMARY KEY,
+    TIEUDE    VARCHAR(255) NOT NULL,
+    NOIDUNGTT TEXT,
+    LIENKET   VARCHAR(255),
+    MADM      VARCHAR(10),
+    FOREIGN KEY (MADM) REFERENCES DANHMUC (MADM) ON DELETE CASCADE
 );
 
--- Chèn dữ liệu mẫu
-INSERT INTO NHACUNGCAP (MANCC, TENNHACC, DIACHI, SODIENTHOAI)
-VALUES ('SS', N'Samsung Việt Nam', N'Quận 9, TP.HCM', '0123456789'),
-       ('AP', N'Apple Inc.', N'California, USA', '0987654321'),
-       ('XI', N'Xiaomi', N'Bắc Kinh, Trung Quốc', '0112233445');
+-- 5. THÊM DỮ LIỆU MẪU
+INSERT INTO DANHMUC (MADM, TENDANHMUC, NGUOIQUANLY)
+VALUES ('TT', 'Tin tức Thời sự', 'Nguyễn Văn A'),
+       ('TG', 'Thế giới', 'Trần Thị B'),
+       ('CN', 'Công nghệ', 'Lê Văn C');
 
-INSERT INTO DIENTHOAI (MADT, TENDT, NAMSANXUAT, CAUHINH, MANCC, HINHANH)
-VALUES ('SSGLS23', N'Samsung Galaxy S23 Ultra', 2023, N'Snapdragon 8 Gen 2, 12GB RAM, 256GB ROM', 'SS',
-        'galaxy_s23.jpg'),
-       ('IP15PM', N'iPhone 15 Pro Max', 2023, N'Apple A17 Pro, 8GB RAM, 256GB ROM', 'AP', 'iphone_15.jpg'),
-       ('XI13T', N'Xiaomi 13T Pro', 2023, N'Dimensity 9200+, 12GB RAM, 512GB ROM', 'XI', 'xiaomi_13t.jpg');
+INSERT INTO TINTUC (MATT, TIEUDE, NOIDUNGTT, LIENKET, MADM)
+VALUES ('TT01', 'Bão số 5 sắp vào biển Đông', 'Nội dung chi tiết về cơn bão số 5, dự báo sức gió và hướng di chuyển.',
+        'http://example.com/bao-so-5', 'TT'),
+       ('TT02', 'Giá xăng tăng mạnh từ hôm nay', 'Bộ Công Thương đã điều chỉnh giá xăng dầu bán lẻ trong nước.',
+        'http://example.com/gia-xang', 'TT'),
+       ('CN01', 'Apple ra mắt sản phẩm mới',
+        'Gã khổng lồ công nghệ Apple vừa giới thiệu dòng sản phẩm mới với nhiều cải tiến.',
+        'http://example.com/apple-new', 'CN'),
+       ('TG01', 'Căng thẳng leo thang tại Trung Đông',
+        'Tình hình chính trị tại khu vực Trung Đông đang có những diễn biến phức tạp.', 'http://example.com/trung-dong',
+        'TG');
